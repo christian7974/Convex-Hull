@@ -8,6 +8,22 @@
 
 void sortList(std::vector<std::tuple<int,int ,double>>&plotted_points){
     //When sorting, consider if the points are colinear(same angle from lowest point), if so consider x value
+    std::tuple<int,int ,double> temp;
+    for(int i = 0; i < plotted_points.size(); i ++){
+        for(int j = i; j > 0 ; j --){
+            if( std::get<2>(plotted_points[j]) < std::get<2>(plotted_points[j-1]) ){
+                temp = plotted_points[j];
+                plotted_points[j] = plotted_points[j-1];
+                plotted_points[j-1] = temp;
+            } else if (std::get<2>(plotted_points[j]) == std::get<2>(plotted_points[j-1])){
+                if(std::get<0>(plotted_points[j]) < std::get<0>(plotted_points[j-1])){
+                    temp = plotted_points[j];
+                    plotted_points[j] = plotted_points[j-1];
+                    plotted_points[j-1] = temp;
+                }
+            }
+        }
+    }
 }
 
 void findAngle(std::tuple<int,int,double> &lowest, std::tuple<int,int,double> &newPoint){
@@ -77,17 +93,24 @@ int main (int argc, char**argv){
     // std::cout << std::get<0>(lowestPair) << ", " <<std::get<1>(lowestPair);
 
     //Find angles between initial point and ALL other points
-
+    int startPoint;
     for(int i = 0; i < plotted_points.size(); i++){
         findAngle(lowestPair,plotted_points[i]);
-        // std::cout << std::get<2>(plotted_points[i]) << '\n';
+        //Finds the lowest point again and saves its index
+        if(std::get<2>(plotted_points[i]) == 0 && std::get<0>(plotted_points[i]) == std::get<0>(lowestPair) && std::get<1>(plotted_points[i]) == std::get<1>(lowestPair)){
+            startPoint = i;
+        }
+    }
+    //removes the lowest point from the vector so that we do not check during stack stage
+    plotted_points.erase(plotted_points.begin()+startPoint);
+    //Sort the vector to determine the order we look at the points
+    sortList(plotted_points);
+
+    for(int i = 0; i < plotted_points.size(); i++){
+        std::cout << "X: " <<std::get<0>(plotted_points[i])<< " Y: " <<std::get<1>(plotted_points[i]) << " Angle: ";
+        std::cout << std::get<2>(plotted_points[i]) << '\n';
     }
 
-        //If it is the same point remove it from the vector 
-        // if(std::get<2>(plotted_points[i]) == 0 && std::get<0>(plotted_points[i]) == std::get<0>(lowestPair) && std::get<1>(plotted_points[i]) == std::get<1>(lowestPair)){
-        //     plotted_points.erase(plotted_points.begin()+i);
-        // }
-    
     // Determine order of points based on angles
     //iterate through sorted order
         //determining if its clockwise or counter clock wise
