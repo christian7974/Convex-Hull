@@ -4,36 +4,52 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 
-std::tuple<int,int> findLowest(std::vector<std::tuple<int,int>>&sorted_points){
-    std::tuple<int,int> lowestPair = sorted_points[0];
+void sortList(std::vector<std::tuple<int,int ,double>>&plotted_points){
+    //When sorting, consider if the points are colinear(same angle from lowest point), if so consider x value
+}
+
+void findAngle(std::tuple<int,int,double> &lowest, std::tuple<int,int,double> &newPoint){
+    double angle;
+    //use the math function atan2, this will spit out the angle in radians
+    //convert to degrees by multiplying by 180, then dividing by pi using the built
+    //in definition M_PI
+    angle = std::atan2(std::get<1>(newPoint) -  std::get<1>(lowest) , std::get<0>(newPoint) - std::get<0>(lowest));
+    angle = angle * 180 / M_PI;
+    std::get<2>(newPoint) = angle;
+    
+}
+
+std::tuple<int,int, double> findLowest(std::vector<std::tuple<int,int ,double>>&plotted_points){
+    std::tuple<int,int, double> lowestPair = plotted_points[0];
     //iterate through vector to find lowest value
-    for(int i = 0; i < sorted_points.size(); i++){
+    for(int i = 0; i < plotted_points.size(); i++){
         //if the y value is less than lowest's y, then lowest becomes the new pair
-        if(std::get<1>(sorted_points[i]) < std::get<1>(lowestPair)){
-            lowestPair = sorted_points[i];
-        } else if (std::get<1>(sorted_points[i]) == std::get<1>(lowestPair)){
+        if(std::get<1>(plotted_points[i]) < std::get<1>(lowestPair)){
+            lowestPair = plotted_points[i];
+        } else if (std::get<1>(plotted_points[i]) == std::get<1>(lowestPair)){
             //If lowestPair y ==  sorted_points y, use one with lowest X
-            if(std::get<0>(sorted_points[i]) < std::get<0>(lowestPair)){
-                lowestPair = sorted_points[i];
+            if(std::get<0>(plotted_points[i]) < std::get<0>(lowestPair)){
+                lowestPair = plotted_points[i];
             }
         }
     }
     return lowestPair;
 }
 
-void getData(std::string fileName, std::vector<std::tuple<int,int>>&sorted_points){
+void getData(std::string fileName, std::vector<std::tuple<int,int, double>>&plotted_points){
     //opens file
     std::ifstream fileOpen(fileName);
     std::string row;
     //traverses file until the end of file is reached
     while(getline(fileOpen, row)){
-        std::vector<std::tuple<int,int>> vecRow;
+        std::vector<std::tuple<int,int, double>> vecRow;
         std::stringstream rowStrings(row);
         int xCord, yCord;
         rowStrings >> xCord;
         rowStrings >> yCord;
-        sorted_points.push_back(std::make_tuple(xCord, yCord));
+        plotted_points.push_back(std::make_tuple(xCord, yCord, 0));
     }
 
 
@@ -41,13 +57,14 @@ void getData(std::string fileName, std::vector<std::tuple<int,int>>&sorted_point
 
 int main (int argc, char**argv){
     //initialize vector of sorted points
-    std::vector<std::tuple<int,int>> sorted_points;
+    //A vector of tuples, the tuples have x val, y val, and angle in relation to intial point
+    std::vector<std::tuple<int,int, double>> plotted_points;
 
     //initializes stack
-    std::stack<std::tuple<int,int>> graham_scan_stack;
+    std::stack<std::tuple<int,int, double>> graham_scan_stack;
 
     //Read file of points, put into a vector
-    getData(argv[1], sorted_points);
+    getData(argv[1], plotted_points);
     
     // for(int i = 0; i < sorted_points.size();i++){
     //     std::cout << std::get<0>(sorted_points[i]) << ", " << std::get<1>(sorted_points[i]) << '\n';
@@ -55,16 +72,22 @@ int main (int argc, char**argv){
 
     //Find lowest point in set
     //Initialize tuple to hold lowest pair, set to lowest function
-    std::tuple<int,int> lowestPair = findLowest(sorted_points);
+    std::tuple<int,int, double> lowestPair = findLowest(plotted_points);
 
     // std::cout << std::get<0>(lowestPair) << ", " <<std::get<1>(lowestPair);
 
     //Find angles between initial point and ALL other points
-        //use cross product for this, if they are colinear, make sure you consider the x and y
-        //cross product:
-        //(x2 *y1) - (x1 * y2)
-        // or 
-        // -run / rise
+
+    for(int i = 0; i < plotted_points.size(); i++){
+        findAngle(lowestPair,plotted_points[i]);
+        // std::cout << std::get<2>(plotted_points[i]) << '\n';
+    }
+
+        //If it is the same point remove it from the vector 
+        // if(std::get<2>(plotted_points[i]) == 0 && std::get<0>(plotted_points[i]) == std::get<0>(lowestPair) && std::get<1>(plotted_points[i]) == std::get<1>(lowestPair)){
+        //     plotted_points.erase(plotted_points.begin()+i);
+        // }
+    
     // Determine order of points based on angles
     //iterate through sorted order
         //determining if its clockwise or counter clock wise
