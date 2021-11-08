@@ -1,0 +1,2 @@
+- talk about how we implemented convex hull
+    - using vectors, pairs
