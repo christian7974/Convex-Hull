@@ -90,8 +90,10 @@ std::tuple<int,int,double> previousPointStack(std::stack<std::tuple<int,int,doub
 
 //Function that fills the stack following the Graham Scan Algorithm
 void graham_scan(std::stack<std::tuple<int,int,double>> &GS_stack, std::vector<std::tuple<int,int, double>> &plotted_points, std::tuple<int,int, double> lowestPair){
-    int crossProductVal;
-    std::tuple<int,int,double> currentPoint, previousPoint, nextPoint;
+    //Initialize a tuple to hold next point inside loop
+    std::tuple<int,int,double> nextPoint;
+
+    //We know that both the lowest point and first point of the vector will be in the stack, so we can push them in before the loop
     GS_stack.push(lowestPair);
     GS_stack.push(plotted_points[0]);
     
