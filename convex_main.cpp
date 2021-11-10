@@ -71,6 +71,59 @@ void getData(std::string fileName, std::vector<std::tuple<int,int, double>>&plot
 
 }
 
+//Function that calculates the cross product(Used to determine clockwise or counter Clockwise)
+int crossProduct(int x1, int y1, int x2, int y2, int x3, int y3){
+    int crossProductValue;
+    crossProductValue = (x2 - x1)*(y3 - y1) - (x3 - x1) * (y2 - y1);
+    return crossProductValue;
+
+}
+
+//This is an easily callable function to get item two spaces into the stack
+std::tuple<int,int,double> previousPointStack(std::stack<std::tuple<int,int,double>> &GS_stack){
+    std::tuple<int,int,double> tempPoint = GS_stack.top();
+    GS_stack.pop();
+    std::tuple<int,int,double> previousPoint = GS_stack.top();
+    GS_stack.push(tempPoint);
+    return previousPoint;
+}
+
+//Function that fills the stack following the Graham Scan Algorithm
+void graham_scan(std::stack<std::tuple<int,int,double>> &GS_stack, std::vector<std::tuple<int,int, double>> &plotted_points, std::tuple<int,int, double> lowestPair){
+    //Initialize a tuple to hold next point inside loop
+    std::tuple<int,int,double> nextPoint;
+
+    //We know that both the lowest point and first point of the vector will be in the stack, so we can push them in before the loop
+    GS_stack.push(lowestPair);
+    GS_stack.push(plotted_points[0]);
+    
+    //This loop from the second element on due to us knowing the the lowest and first element of the vector will be in the hull and on the stack
+    for(int i = 1; i < plotted_points.size(); i ++){
+        //push current value into the stack
+        GS_stack.push(plotted_points[i]);
+        
+        //Conditional to make sure that when we reach final point it is compared back to the first value
+        if( i + 1 < plotted_points.size()){
+            nextPoint = plotted_points[i + 1];
+        }else {
+            nextPoint = lowestPair;
+        }
+
+        //While loop
+            //This will continously call the cross Product until it produces a value above 0
+            //Inorder to allow the value to change, we pop a value out and call the previousPointStack Function to get the value right before the new top
+            //We call the new top in the next set of x and y
+            //The only values that remain consistent is our next value, as we are only editing the points we have visited in order to produce the convex hull
+        while(crossProduct(std::get<0>(previousPointStack(GS_stack)), std::get<1>(previousPointStack(GS_stack)), std::get<0>(GS_stack.top()), std::get<1>(GS_stack.top()), std::get<0>(nextPoint), std::get<1>(nextPoint)) <=  0){
+            GS_stack.pop();
+        }
+    }
+
+
+
+}
+
+
 int main (int argc, char**argv){
     //initialize vector of sorted points
     //A vector of tuples, the tuples have x val, y val, and angle in relation to intial point
@@ -103,21 +156,27 @@ int main (int argc, char**argv){
     }
     //removes the lowest point from the vector so that we do not check during stack stage
     plotted_points.erase(plotted_points.begin()+startPoint);
+
     //Sort the vector to determine the order we look at the points
+    // Determine order of points based on angles
     sortList(plotted_points);
 
-    for(int i = 0; i < plotted_points.size(); i++){
-        std::cout << "X: " <<std::get<0>(plotted_points[i])<< " Y: " <<std::get<1>(plotted_points[i]) << " Angle: ";
-        std::cout << std::get<2>(plotted_points[i]) << '\n';
+    // for(int i = 0; i < plotted_points.size(); i++){
+    //     std::cout << "X: " <<std::get<0>(plotted_points[i])<< " Y: " <<std::get<1>(plotted_points[i]) << " Angle: ";
+    //     std::cout << std::get<2>(plotted_points[i]) << '\n';
+    // }
+
+    //Call function to begin Gramham Scan
+    graham_scan(graham_scan_stack, plotted_points, lowestPair);
+
+
+    //temp print to see if we have the right points
+    int stackSize = graham_scan_stack.size();
+    for(int i = 0; i < stackSize; i++){
+        std::cout << std::get<0>(graham_scan_stack.top()) << ' ' << std::get<1>(graham_scan_stack.top()) << '\n';
+        graham_scan_stack.pop();
     }
 
-    // Determine order of points based on angles
-    //iterate through sorted order
-        //determining if its clockwise or counter clock wise
-            //cross product:
-            //(x2 - x1) * (x3 - x1) - (y2 - y1) * (y3 - y1)
-            //if result is negative its clockwise and should be popped off
-        //if makes a counterclock wise turn, place on stack
-        // else pop off stack, move to next point
+
 
 }
