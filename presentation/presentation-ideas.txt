@@ -1,3 +1,5 @@
 - talk about how we implemented convex hull
-    - using vectors, pairs 
+    - using vectors, tuples, libraries 
 - draw a convex and non-convex polygon on the board (do the straight line test)
+- run through conevex hull examples (1-2 difficult ones)
+- talk about the applications of convex hull (game, physics collider)
