@@ -1,4 +1,4 @@
-OBJS = Convex_Hull_Final_Program.o
+OBJS = sfml_startercode.o
 CXX = g++
 LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system
 
