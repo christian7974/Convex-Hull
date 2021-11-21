@@ -12,7 +12,12 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 	// create the window that will open when the program is launched
 	// first parameter is width, second is height, third is title of the window
 	sf::RenderWindow window(sf::VideoMode(1000, 1000), "Convex Hull Generator");
-
+	
+	//This creates a 2d camera to allow us to orient the screen properly
+	//Allows origin to be in the bottom left
+	sf::View viewPoint;
+	viewPoint.setRotation(90);
+	window.setView(viewPoint);
 
 	// the first number is the size, the second number is the number of points in the circle
 
@@ -95,11 +100,11 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 		// this draws all of the points on the polygon at the correct points
 		for (int i = 0; i < plotted_points.size(); i++) {
 			sf::CircleShape point;
-			point.setRadius(10);
+			point.setRadius(8.5);
 			point.setFillColor(sf::Color(255, 255, 255));
 			// change the values inside of set position to all of the points, not just the ones that are in 
 				// the convex hull
-			point.setPosition(std::get<0>(plotted_points[i]) - 10 + 100, std::get<1>(plotted_points[i]) - 7 + 100);
+			point.setPosition(std::get<0>(plotted_points[i]) + 94, std::get<1>(plotted_points[i]) + 95);
 			window.draw(point);
 		}
 		window.display();
