@@ -131,9 +131,9 @@ int main()
             // this is the text that will be next to the point so that the user can see what the point is referring to
             sf::Text xText;
             xText.setString("(" + std::to_string(xValues[i]) + "," + std::to_string(yValues[i]) + ")");
-            xText.setPosition(xValues[i] - 40 + 100, yValues[i] - 7 + 120);
+            xText.setPosition(xValues[i] - 40 + 100, yValues[i] - 7 + 125);
             xText.setFillColor(sf::Color::Red);
-            xText.setCharacterSize(20);
+            xText.setCharacterSize(25);
             xText.setFont(font);
 
             window.draw(xText);
