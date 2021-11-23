@@ -1,8 +1,14 @@
-﻿  sfml_startercode.cpp
-c:\users\tfarg\documents\github\convex-hull\sfml_startercode.cpp(64): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+﻿  Final_Convex_Hullcpp.cpp
+c:\users\tfarg\documents\github\convex-hull\convex_hull_project\convex_hull_project\final_convex_hullcpp.cpp(53): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-c:\users\tfarg\documents\github\convex-hull\sfml_startercode.cpp(117): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\tfarg\documents\github\convex-hull\convex_hull_project\convex_hull_project\final_convex_hullcpp.cpp(101): warning C4018: '<': signed/unsigned mismatch
+c:\users\tfarg\documents\github\convex-hull\convex_hull_project\convex_hull_project\final_convex_hullcpp.cpp(107): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\tfarg\documents\github\convex-hull\convex_hull_project\convex_hull_project\final_convex_hullcpp.cpp(117): warning C4018: '<': signed/unsigned mismatch
+c:\users\tfarg\documents\github\convex-hull\convex_hull_project\convex_hull_project\final_convex_hullcpp.cpp(149): warning C4018: '<': signed/unsigned mismatch
+c:\users\tfarg\documents\github\convex-hull\convex_hull_project\convex_hull_project\final_convex_hullcpp.cpp(209): warning C4018: '<': signed/unsigned mismatch
+c:\users\tfarg\documents\github\convex-hull\convex_hull_project\convex_hull_project\final_convex_hullcpp.cpp(214): warning C4018: '<': signed/unsigned mismatch
+c:\users\tfarg\documents\github\convex-hull\convex_hull_project\convex_hull_project\final_convex_hullcpp.cpp(260): warning C4018: '<': signed/unsigned mismatch
   Convex_Hull_project.vcxproj -> C:\Users\tfarg\Documents\GitHub\Convex-Hull\Convex_Hull_project\Debug\Convex_Hull_project.exe
