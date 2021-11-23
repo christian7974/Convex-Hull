@@ -5,10 +5,84 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
+#include <algorithm>
 
-void sortList(std::vector<std::tuple<int,int ,double>>&plotted_points){
+void InsertionSort(std::vector<std::tuple<int, int, double>> &bucket) {
+    std::tuple<int, int, double> temp;
+    for (int i = 0; i < bucket.size(); i++) {
+        for (int j = i; j > 0; j--) {
+            if ( std::get<2>(bucket[j]) < std::get<2>(bucket[j-1]) ) {
+                temp = bucket[j];
+                bucket[j] = bucket[j-1];
+                bucket[j-1] = temp;
+            }
+            // consider if the points are colinear(same angle from lowest point), if so consider x value
+            else if ( std::get<2>(bucket[j]) == std::get<2>(bucket[j-1]) ) {
+                if ( std::get<0>(bucket[j]) < std::get<0>(bucket[j-1]) ) {
+                    temp = bucket[j];
+                    bucket[j] = bucket[j-1];
+                    bucket[j-1] = temp;
+                }
+            }
+        }
+    }
+}
+
+void BucketSort(std::vector<std::tuple<int,int ,double>> &plotted_points) {
+    // 1) Create n empty buckets that stores the tuples
+    int n = plotted_points.size();
+    std::vector<std::tuple<int, int, double>> buckets[n];
+
+
+
+    double max = std::get<2>(plotted_points[0]);
+    for (int i = 0; i < plotted_points.size(); i++) {
+        if (std::get<2>(plotted_points[i]) > max) {
+            max = std::get<2>(plotted_points[i]);
+        }
+    }
+
+
+    /*
+    // print out angles
+    for (int i = 0; i < plotted_points.size(); i++){
+        std::cout << "X: " <<std::get<0>(plotted_points[i])<< " Y: " <<std::get<1>(plotted_points[i]) << " Angle: ";
+        std::cout << std::get<2>(plotted_points[i]) << '\n';
+    }
+    */
+
+
+    // 2) Put elements in different buckets
+    for (int i = 0; i < n; i++) {
+        int bucketIndex = std::floor(n * std::get<2>(plotted_points[i]) / max); // Index in bucket
+        buckets[bucketIndex].push_back(plotted_points[i]);
+
+    }
+
+    // 3) Sort individual buckets using insertion sort
+    for (int i = 0; i < n; i++) {
+        InsertionSort(buckets[i]);
+    }
+
+
+    int index = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < buckets[i].size(); j++) {
+            plotted_points[index++] = buckets[i][j];
+
+        }
+    }
+
+}
+
+void sortList(std::vector<std::tuple<int,int ,double>> &plotted_points){
+
+    BucketSort(plotted_points);
+
     //When sorting, consider if the points are colinear(same angle from lowest point), if so consider x value
-    std::tuple<int,int ,double> temp;
+
+    /*
+    std::tuple<int, int, double> temp;
     for(int i = 0; i < plotted_points.size(); i ++){
         for(int j = i; j > 0 ; j --){
             if( std::get<2>(plotted_points[j]) < std::get<2>(plotted_points[j-1]) ){
@@ -24,6 +98,8 @@ void sortList(std::vector<std::tuple<int,int ,double>>&plotted_points){
             }
         }
     }
+    */
+
 }
 
 void findAngle(std::tuple<int,int,double> &lowest, std::tuple<int,int,double> &newPoint){
@@ -32,7 +108,7 @@ void findAngle(std::tuple<int,int,double> &lowest, std::tuple<int,int,double> &n
     //convert to degrees by multiplying by 180, then dividing by pi using the built
     //in definition M_PI
     angle = std::atan2(std::get<1>(newPoint) -  std::get<1>(lowest) , std::get<0>(newPoint) - std::get<0>(lowest));
-    angle = angle * 180 / M_PI;
+    angle = angle * 180 / 3.14;
     std::get<2>(newPoint) = angle;
     
 }
