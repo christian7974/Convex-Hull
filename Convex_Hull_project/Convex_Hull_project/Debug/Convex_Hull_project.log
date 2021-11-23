@@ -1,0 +1,8 @@
+﻿  sfml_startercode.cpp
+c:\users\tfarg\documents\github\convex-hull\sfml_startercode.cpp(64): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\tfarg\documents\github\convex-hull\sfml_startercode.cpp(117): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Convex_Hull_project.vcxproj -> C:\Users\tfarg\Documents\GitHub\Convex-Hull\Convex_Hull_project\Debug\Convex_Hull_project.exe
