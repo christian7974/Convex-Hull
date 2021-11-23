@@ -29,10 +29,9 @@ void InsertionSort(std::vector<std::tuple<int, int, double>> &bucket) {
 }
 
 void BucketSort(std::vector<std::tuple<int,int ,double>> &plotted_points) {
-    // 1) Create n empty buckets that stores the tuples
+    // 1. Create n empty buckets that stores the tuples
     int n = plotted_points.size();
     std::vector<std::tuple<int, int, double>> buckets[n];
-
 
 
     double max = std::get<2>(plotted_points[0]);
@@ -42,24 +41,14 @@ void BucketSort(std::vector<std::tuple<int,int ,double>> &plotted_points) {
         }
     }
 
-
-    /*
-    // print out angles
-    for (int i = 0; i < plotted_points.size(); i++){
-        std::cout << "X: " <<std::get<0>(plotted_points[i])<< " Y: " <<std::get<1>(plotted_points[i]) << " Angle: ";
-        std::cout << std::get<2>(plotted_points[i]) << '\n';
-    }
-    */
-
-
-    // 2) Put elements in different buckets
+    // 2. Put elements in different buckets
     for (int i = 0; i < n; i++) {
-        int bucketIndex = std::floor(n * std::get<2>(plotted_points[i]) / max); // Index in bucket
+        int bucketIndex = std::floor(n * std::floor(std::get<2>(plotted_points[i])) / max); // Index in bucket
         buckets[bucketIndex].push_back(plotted_points[i]);
 
     }
 
-    // 3) Sort individual buckets using insertion sort
+    // 3. Sort individual buckets using insertion sort
     for (int i = 0; i < n; i++) {
         InsertionSort(buckets[i]);
     }
@@ -68,38 +57,14 @@ void BucketSort(std::vector<std::tuple<int,int ,double>> &plotted_points) {
     int index = 0;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < buckets[i].size(); j++) {
-            plotted_points[index++] = buckets[i][j];
-
+            plotted_points[index] = buckets[i][j];
+            index++;
         }
     }
-
 }
 
 void sortList(std::vector<std::tuple<int,int ,double>> &plotted_points){
-
     BucketSort(plotted_points);
-
-    //When sorting, consider if the points are colinear(same angle from lowest point), if so consider x value
-
-    /*
-    std::tuple<int, int, double> temp;
-    for(int i = 0; i < plotted_points.size(); i ++){
-        for(int j = i; j > 0 ; j --){
-            if( std::get<2>(plotted_points[j]) < std::get<2>(plotted_points[j-1]) ){
-                temp = plotted_points[j];
-                plotted_points[j] = plotted_points[j-1];
-                plotted_points[j-1] = temp;
-            } else if (std::get<2>(plotted_points[j]) == std::get<2>(plotted_points[j-1])){
-                if(std::get<0>(plotted_points[j]) < std::get<0>(plotted_points[j-1])){
-                    temp = plotted_points[j];
-                    plotted_points[j] = plotted_points[j-1];
-                    plotted_points[j-1] = temp;
-                }
-            }
-        }
-    }
-    */
-
 }
 
 void findAngle(std::tuple<int,int,double> &lowest, std::tuple<int,int,double> &newPoint){
@@ -110,7 +75,7 @@ void findAngle(std::tuple<int,int,double> &lowest, std::tuple<int,int,double> &n
     angle = std::atan2(std::get<1>(newPoint) -  std::get<1>(lowest) , std::get<0>(newPoint) - std::get<0>(lowest));
     angle = angle * 180 / 3.14;
     std::get<2>(newPoint) = angle;
-    
+
 }
 
 std::tuple<int,int, double> findLowest(std::vector<std::tuple<int,int ,double>>&plotted_points){
@@ -143,8 +108,6 @@ void getData(std::string fileName, std::vector<std::tuple<int,int, double>>&plot
         rowStrings >> yCord;
         plotted_points.push_back(std::make_tuple(xCord, yCord, 0));
     }
-
-
 }
 
 //Function that calculates the cross product(Used to determine clockwise or counter Clockwise)
@@ -172,12 +135,12 @@ void graham_scan(std::stack<std::tuple<int,int,double>> &GS_stack, std::vector<s
     //We know that both the lowest point and first point of the vector will be in the stack, so we can push them in before the loop
     GS_stack.push(lowestPair);
     GS_stack.push(plotted_points[0]);
-    
+
     //This loop from the second element on due to us knowing the the lowest and first element of the vector will be in the hull and on the stack
     for(int i = 1; i < plotted_points.size(); i ++){
         //push current value into the stack
         GS_stack.push(plotted_points[i]);
-        
+
         //Conditional to make sure that when we reach final point it is compared back to the first value
         if( i + 1 < plotted_points.size()){
             nextPoint = plotted_points[i + 1];
@@ -194,9 +157,6 @@ void graham_scan(std::stack<std::tuple<int,int,double>> &GS_stack, std::vector<s
             GS_stack.pop();
         }
     }
-
-
-
 }
 
 
@@ -210,7 +170,7 @@ int main (int argc, char**argv){
 
     //Read file of points, put into a vector
     getData(argv[1], plotted_points);
-    
+
     // for(int i = 0; i < sorted_points.size();i++){
     //     std::cout << std::get<0>(sorted_points[i]) << ", " << std::get<1>(sorted_points[i]) << '\n';
     // }
@@ -235,12 +195,16 @@ int main (int argc, char**argv){
 
     //Sort the vector to determine the order we look at the points
     // Determine order of points based on angles
-    sortList(plotted_points);
+    BucketSort(plotted_points);
 
-    // for(int i = 0; i < plotted_points.size(); i++){
-    //     std::cout << "X: " <<std::get<0>(plotted_points[i])<< " Y: " <<std::get<1>(plotted_points[i]) << " Angle: ";
-    //     std::cout << std::get<2>(plotted_points[i]) << '\n';
-    // }
+
+    /*
+    for (int i = 0; i < plotted_points.size(); i++){
+        std::cout << "X: " <<std::get<0>(plotted_points[i])<< " Y: " <<std::get<1>(plotted_points[i]) << " Angle: ";
+        std::cout << std::get<2>(plotted_points[i]) << '\n';
+    }
+    */
+
 
     //Call function to begin Gramham Scan
     graham_scan(graham_scan_stack, plotted_points, lowestPair);
@@ -252,7 +216,4 @@ int main (int argc, char**argv){
         std::cout << std::get<0>(graham_scan_stack.top()) << ' ' << std::get<1>(graham_scan_stack.top()) << '\n';
         graham_scan_stack.pop();
     }
-
-
-
 }
