@@ -5,10 +5,15 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
+#include <string>
 #include <SFML/Graphics.hpp>
 
 void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points, std::stack<std::tuple<int, int, double>> &GS_stack) {
-
+	
+	sf::Font font;
+	if (!font.loadFromFile("res/roboto/Roboto-Black.ttf")) {
+		std::cout << "Error loading file" << std::endl;
+	}
 	// create the window that will open when the program is launched
 	// first parameter is width, second is height, third is title of the window
 	sf::RenderWindow window(sf::VideoMode(1000, 1000), "Convex Hull Generator");
@@ -105,6 +110,15 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 			// change the values inside of set position to all of the points, not just the ones that are in 
 				// the convex hull
 			point.setPosition(std::get<0>(plotted_points[i]) + 94, std::get<1>(plotted_points[i]) + 95);
+			sf::Text xText;
+			xText.setString("(" + std::to_string(std::get<0>(plotted_points[i])) + "," + std::to_string(std::get<1>(plotted_points[i])) + ")");
+			xText.setPosition(std::get<0>(plotted_points[i])+ 100, std::get<1>(plotted_points[i]) + 110);
+			xText.setFillColor(sf::Color::Red);
+			xText.setCharacterSize(20);
+			xText.setFont(font);
+			xText.setRotation(90);
+
+			window.draw(xText);
 			window.draw(point);
 		}
 		window.display();
