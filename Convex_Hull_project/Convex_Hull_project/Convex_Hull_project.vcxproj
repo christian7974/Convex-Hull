@@ -133,8 +133,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\convex_main.cpp" />
-    <ClCompile Include="..\..\sfml_startercode.cpp" />
     <ClCompile Include="Final_Convex_Hullcpp.cpp" />
   </ItemGroup>
   <ItemGroup>
