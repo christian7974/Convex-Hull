@@ -104,6 +104,12 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 					view.reset(sf::FloatRect(std::get<0>(plotted_points[size]), std::get<1>(plotted_points[size]), 500, 500));
 					view.rotate(90);
 					window.setView(view);
+				} else if (event.key.code == sf::Keyboard::U) {
+					charSize = 18;
+					radiusSize = 8;
+					view.reset(sf::FloatRect(0, 0, 1000, 1000));
+					view.rotate(90);
+					window.setView(view);
 				}
 				break;
 			default:
