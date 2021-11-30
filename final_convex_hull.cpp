@@ -9,7 +9,13 @@
 #include <SFML/Graphics.hpp>
 
 void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points, std::stack<std::tuple<int, int, double>> &GS_stack) {
-	
+	//initialize the for the zoom function
+	sf::View view;
+	//initialize the stored size of the plotted points for our zoom function
+	//this is because we want to be centered at the lowest point, which is added to the end of
+	//plotted points in main
+	int size = plotted_points.size() - 1;
+
 	sf::Font font;
 	if (!font.loadFromFile("res/roboto/Roboto-Black.ttf")) {
 		std::cout << "Error loading file" << std::endl;
@@ -75,11 +81,11 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 
 	// the code below is how the window will open and what will display on the window
 	sf::Event event;
-
-	sf::Text text;
-	text.setString("Hello World");
-	text.setCharacterSize(20);
-	text.setPosition(750, 750);
+	sf::Text xText;
+	//the size of our font
+	//allows us to shrink font when we zoom
+	int charSize = 18;
+	int radiusSize = 8;
 	// this is the while loop that will display the gui and the visualization of the convex hull
 	while (window.isOpen())
 	{
@@ -91,7 +97,21 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 			case sf::Event::Closed:
 				window.close();
 				break;
-
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::Z) {
+					charSize = 9;
+					radiusSize =7;
+					view.reset(sf::FloatRect(std::get<0>(plotted_points[size]), std::get<1>(plotted_points[size]), 500, 500));
+					view.rotate(90);
+					window.setView(view);
+				} else if (event.key.code == sf::Keyboard::U) {
+					charSize = 18;
+					radiusSize = 8;
+					view.reset(sf::FloatRect(0, 0, 1000, 1000));
+					view.rotate(90);
+					window.setView(view);
+				}
+				break;
 			default:
 				break;
 			}
@@ -99,88 +119,84 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 		window.clear(sf::Color::Black);
 		//window.draw(circle);
 		window.draw(convexHull);
-		//window.draw(xAxis);
-		//window.draw(yAxis);
-		window.draw(text);
+
 		// this draws all of the points on the polygon at the correct points
 		for (int i = 0; i < plotted_points.size(); i++) {
 			sf::CircleShape point;
-			point.setRadius(8.5);
+			point.setRadius(radiusSize);
 			point.setFillColor(sf::Color(255, 255, 255));
 			// change the values inside of set position to all of the points, not just the ones that are in 
 				// the convex hull
-			point.setPosition(std::get<0>(plotted_points[i]) + 94, std::get<1>(plotted_points[i]) + 95);
-			sf::Text xText;
+			point.setPosition(std::get<0>(plotted_points[i])+ 94, std::get<1>(plotted_points[i]) + 95);
 			xText.setString("(" + std::to_string(std::get<0>(plotted_points[i])) + "," + std::to_string(std::get<1>(plotted_points[i])) + ")");
-			xText.setPosition(std::get<0>(plotted_points[i])+ 100, std::get<1>(plotted_points[i]) + 110);
+			xText.setPosition(std::get<0>(plotted_points[i]) + 100, std::get<1>(plotted_points[i]) + 110);
 			xText.setFillColor(sf::Color::Red);
-			xText.setCharacterSize(20);
+			xText.setCharacterSize(charSize);
 			xText.setFont(font);
 			xText.setRotation(90);
 
-			window.draw(xText);
 			window.draw(point);
+			window.draw(xText);
 		}
 		window.display();
 	}
 }
 
 void InsertionSort(std::vector<std::tuple<int, int, double>> &bucket) {
-    std::tuple<int, int, double> temp;
-    for (int i = 0; i < bucket.size(); i++) {
-        for (int j = i; j > 0; j--) {
-            if ( std::get<2>(bucket[j]) < std::get<2>(bucket[j-1]) ) {
-                temp = bucket[j];
-                bucket[j] = bucket[j-1];
-                bucket[j-1] = temp;
-            }
-            // consider if the points are colinear(same angle from lowest point), if so consider x value
-            else if ( std::get<2>(bucket[j]) == std::get<2>(bucket[j-1]) ) {
-                if ( std::get<0>(bucket[j]) < std::get<0>(bucket[j-1]) ) {
-                    temp = bucket[j];
-                    bucket[j] = bucket[j-1];
-                    bucket[j-1] = temp;
-                }
-            }
-        }
-    }
+	std::tuple<int, int, double> temp;
+	for (int i = 0; i < bucket.size(); i++) {
+		for (int j = i; j > 0; j--) {
+			if (std::get<2>(bucket[j]) < std::get<2>(bucket[j - 1])) {
+				temp = bucket[j];
+				bucket[j] = bucket[j - 1];
+				bucket[j - 1] = temp;
+			}
+			// consider if the points are colinear(same angle from lowest point), if so consider x value
+			else if (std::get<2>(bucket[j]) == std::get<2>(bucket[j - 1])) {
+				if (std::get<0>(bucket[j]) < std::get<0>(bucket[j - 1])) {
+					temp = bucket[j];
+					bucket[j] = bucket[j - 1];
+					bucket[j - 1] = temp;
+				}
+			}
+		}
+	}
 }
 
-void BucketSort(std::vector<std::tuple<int,int ,double>> &plotted_points) {
-    // 1. Create n empty buckets that stores the tuples
-    int n = plotted_points.size();
-    //std::vector<std::tuple<int, int, double>> buckets[n + 1];
-    std::vector<std::vector<std::tuple<int, int, double>>> buckets(n);
-
-    // find the max value of the array
-    double max = std::get<2>(plotted_points[0]);
-    for (int i = 0; i < plotted_points.size(); i++) {
-        if (std::get<2>(plotted_points[i]) > max) {
-            max = std::get<2>(plotted_points[i]);
-        }
-    }
-
-    // 2. Put elements in different buckets
-    for (int i = 0; i < n; i++) {
-        int bucketIndex = std::floor(n * std::floor(std::get<2>(plotted_points[i])) / max); // Index in bucket
-        buckets[bucketIndex].push_back(plotted_points[i]);
-
-    }
-
-    // 3. Sort individual buckets using insertion sort
-    for (int i = 0; i < n; i++) {
-        InsertionSort(buckets[i]);
-    }
+void BucketSort(std::vector<std::tuple<int, int, double>> &plotted_points) {
+	// 1. Create n empty buckets that stores the tuples
+	int n = plotted_points.size();
+	std::vector<std::vector<std::tuple<int, int, double>>> buckets;
+	buckets.resize(n);
 
 
-    // 4. Go through the list of buckets in order and insert the values into the original list
-    int index = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < buckets[i].size(); j++) {
-            plotted_points[index] = buckets[i][j];
-            index++;
-        }
-    }
+	double max = std::get<2>(plotted_points[0]);
+	for (int i = 0; i < plotted_points.size(); i++) {
+		if (std::get<2>(plotted_points[i]) > max) {
+			max = std::get<2>(plotted_points[i]);
+		}
+	}
+
+	// 2. Put elements in different buckets
+	for (int i = 0; i < n; i++) {
+		int bucketIndex = std::floor(n * std::floor(std::get<2>(plotted_points[i])) / max); // Index in bucket
+		buckets[bucketIndex].push_back(plotted_points[i]);
+
+	}
+
+	// 3. Sort individual buckets using insertion sort
+	for (int i = 0; i < n; i++) {
+		InsertionSort(buckets[i]);
+	}
+
+
+	int index = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < buckets[i].size(); j++) {
+			plotted_points[index] = buckets[i][j];
+			index++;
+		}
+	}
 }
 
 void findAngle(std::tuple<int, int, double> &lowest, std::tuple<int, int, double> &newPoint) {
