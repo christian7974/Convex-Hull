@@ -86,6 +86,7 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 	//allows us to shrink font when we zoom
 	int charSize = 18;
 	int radiusSize = 8;
+	int sizeMultiplier = 1;
 	// this is the while loop that will display the gui and the visualization of the convex hull
 	while (window.isOpen())
 	{
@@ -98,18 +99,22 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 				window.close();
 				break;
 			case sf::Event::KeyPressed:
-				if (event.key.code == sf::Keyboard::Z) {
-					charSize = 9;
+				if (event.key.code == sf::Keyboard::Up) {
+					charSize += 9 ;
 					radiusSize =7;
-					view.reset(sf::FloatRect(std::get<0>(plotted_points[size]), std::get<1>(plotted_points[size]), 500, 500));
+					sizeMultiplier += 1;
+					/*view.reset(sf::FloatRect(std::get<0>(plotted_points[size]), std::get<1>(plotted_points[size]), 500, 500));
 					view.rotate(90);
-					window.setView(view);
-				} else if (event.key.code == sf::Keyboard::U) {
-					charSize = 18;
-					radiusSize = 8;
-					view.reset(sf::FloatRect(0, 0, 1000, 1000));
+					window.setView(view);*/
+				} else if (event.key.code == sf::Keyboard::Down) {
+					if (sizeMultiplier > 1) {
+						sizeMultiplier -= 1;
+						charSize -= 9;
+						radiusSize = 8;
+					}
+					/*view.reset(sf::FloatRect(0, 0, 1000, 1000));
 					view.rotate(90);
-					window.setView(view);
+					window.setView(view);*/
 				}
 				break;
 			default:
@@ -127,9 +132,9 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 			point.setFillColor(sf::Color(255, 255, 255));
 			// change the values inside of set position to all of the points, not just the ones that are in 
 				// the convex hull
-			point.setPosition(std::get<0>(plotted_points[i])+ 94, std::get<1>(plotted_points[i]) + 95);
+			point.setPosition(std::get<0>(plotted_points[i])*sizeMultiplier + 94, std::get<1>(plotted_points[i])*sizeMultiplier + 95);
 			xText.setString("(" + std::to_string(std::get<0>(plotted_points[i])) + "," + std::to_string(std::get<1>(plotted_points[i])) + ")");
-			xText.setPosition(std::get<0>(plotted_points[i]) + 100, std::get<1>(plotted_points[i]) + 110);
+			xText.setPosition(std::get<0>(plotted_points[i])*sizeMultiplier + 100, std::get<1>(plotted_points[i])*sizeMultiplier + 110);
 			xText.setFillColor(sf::Color::Red);
 			xText.setCharacterSize(charSize);
 			xText.setFont(font);
