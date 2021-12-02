@@ -9,10 +9,10 @@
 void WriteFile(std::string file_name){
     // Opens the outfile file, prepares it for writing
     std::ofstream output_file(file_name);
-    // the program generates at most 300 points in one file
-    for (int i = 0; i < rand() % 300; i ++) {
-        // the x and y will be no greater than 1000 
-        output_file << rand() % 1000 << " " << rand() % 1000 << "\n";
+    // the program generates at most 3000 points in one file
+    for (int i = 0; i < rand() % 3000; i ++) {
+        // the x and y will be no greater than 800 
+        output_file << rand() % 800 << " " << rand() % 800 << "\n";
     }
     //for (int i = 0; i < )
 }
@@ -23,6 +23,6 @@ int main() {
     for (int i = 1; i <= 10; i ++) {
         WriteFile("Test File " + std::to_string(i));
     }
-    
+    WriteFile("Test File 11");
     return 0;
 }
