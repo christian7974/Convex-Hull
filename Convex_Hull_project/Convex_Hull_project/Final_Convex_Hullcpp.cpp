@@ -8,6 +8,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
+
 void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points, std::stack<std::tuple<int, int, double>> &GS_stack) {
 	//initialize the for the zoom function
 	sf::View view;
@@ -37,12 +38,13 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 	// circle.setPointCount(12);
 	// the parameter is the number of points in the shape
 	int numPoints = GS_stack.size();
+
 	sf::ConvexShape convexHull(numPoints);
 	// this is the fill color for the convex hull
-	convexHull.setFillColor(sf::Color(0, 255, 0));
+	convexHull.setFillColor(sf::Color(0, 0, 0));
 	// this sets the thickeness of the outline
 	convexHull.setOutlineColor(sf::Color(255, 255, 255));
-	convexHull.setOutlineThickness(3);
+	convexHull.setOutlineThickness(1);
 	// 0-4
 
 
@@ -82,11 +84,14 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 	// the code below is how the window will open and what will display on the window
 	sf::Event event;
 	sf::Text xText;
-	//the size of our font
-	//allows us to shrink font when we zoom
-	int charSize = 18;
-	int radiusSize = 8;
+	
+	//These two counters allow us to dynamically change both the thickness of the convexhull and point outlines,
+	//the size Muiltiplier allows us to change the scale to which we see the convex hull, as well as the change in
+	//position for the points
+	//All of this is in regards to our zoom features
+	float outlineThicknessCounter = 1;
 	int sizeMultiplier = 1;
+
 	// this is the while loop that will display the gui and the visualization of the convex hull
 	while (window.isOpen())
 	{
@@ -98,29 +103,38 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 			case sf::Event::Closed:
 				window.close();
 				break;
+			//This event key states that if we press the up arrow or down arrow, the actions inside will occur
 			case sf::Event::KeyPressed:
 				if (event.key.code == sf::Keyboard::Up) {
-					charSize += 9 ;
-					radiusSize =7;
-					sizeMultiplier += 1;
-					/*view.reset(sf::FloatRect(std::get<0>(plotted_points[size]), std::get<1>(plotted_points[size]), 500, 500));
-					view.rotate(90);
-					window.setView(view);*/
-				} else if (event.key.code == sf::Keyboard::Down) {
-					if (sizeMultiplier > 1) {
-						sizeMultiplier -= 1;
-						charSize -= 9;
-						radiusSize = 8;
+					//this condition checks to make sure there is always an outline that a user can see
+					if (outlineThicknessCounter > 0.1) {
+						outlineThicknessCounter -= 0.1;
 					}
-					/*view.reset(sf::FloatRect(0, 0, 1000, 1000));
-					view.rotate(90);
-					window.setView(view);*/
+					//increases the size for both scale of hull and point position
+					sizeMultiplier += 1;
+				
+				} else if (event.key.code == sf::Keyboard::Down) {
+					//this condition checks to make sure there is always an outline that a user can see that is not too large
+					//if its too large it will cover the points
+					if (sizeMultiplier > 1) {
+						if (outlineThicknessCounter < 0.1) {
+							outlineThicknessCounter += 0.1;
+						}
+						sizeMultiplier -= 1;
+				
+					}
 				}
 				break;
 			default:
 				break;
 			}
 		}
+		//These lines of code set the scale and postion of our convex hull to adjust with the changing values, and allows for the zoom
+		//feature to look semi-normal
+		convexHull.setScale(sizeMultiplier, sizeMultiplier);
+		convexHull.setPosition(100 - (100 * sizeMultiplier), 100 - (100 * sizeMultiplier));
+		convexHull.setOutlineThickness(outlineThicknessCounter);
+		//FIX SMALL BUG REGARDING LINE DISAPPERANCE WHEN GETTING AMBITIOUS WITH THE ZOOM BUTTON
 		window.clear(sf::Color::Black);
 		//window.draw(circle);
 		window.draw(convexHull);
@@ -128,15 +142,17 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 		// this draws all of the points on the polygon at the correct points
 		for (int i = 0; i < plotted_points.size(); i++) {
 			sf::CircleShape point;
-			point.setRadius(radiusSize);
+			point.setRadius(8);
 			point.setFillColor(sf::Color(255, 255, 255));
+			point.setOutlineColor(sf::Color(0, 0, 0));
+			point.setOutlineThickness(outlineThicknessCounter+3);
 			// change the values inside of set position to all of the points, not just the ones that are in 
 				// the convex hull
 			point.setPosition(std::get<0>(plotted_points[i])*sizeMultiplier + 94, std::get<1>(plotted_points[i])*sizeMultiplier + 95);
 			xText.setString("(" + std::to_string(std::get<0>(plotted_points[i])) + "," + std::to_string(std::get<1>(plotted_points[i])) + ")");
 			xText.setPosition(std::get<0>(plotted_points[i])*sizeMultiplier + 100, std::get<1>(plotted_points[i])*sizeMultiplier + 110);
 			xText.setFillColor(sf::Color::Red);
-			xText.setCharacterSize(charSize);
+			xText.setCharacterSize(25);
 			xText.setFont(font);
 			xText.setRotation(90);
 
