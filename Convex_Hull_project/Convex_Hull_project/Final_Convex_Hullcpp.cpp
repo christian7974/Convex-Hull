@@ -69,16 +69,6 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 	// important to have the points in clockwise or counterclockwise order
 
 //--------------------------------------------------------------------------------
-	// below is the code that will create the x axis of the euclidean plane
-	sf::RectangleShape xAxis(sf::Vector2f(500, 0));
-	xAxis.setOutlineThickness(10);
-	xAxis.setPosition(0, 500);
-
-	// below is the code that will create the y axis of the euclidean plane
-	sf::RectangleShape yAxis;
-	yAxis.setSize(sf::Vector2f(0, 500));
-	yAxis.setOutlineThickness(10);
-	yAxis.setPosition(10, 0);
 
 
 	// the code below is how the window will open and what will display on the window
@@ -107,7 +97,7 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 			case sf::Event::KeyPressed:
 				if (event.key.code == sf::Keyboard::Up) {
 					//this condition checks to make sure there is always an outline that a user can see
-					if (outlineThicknessCounter > 0.1) {
+					if (outlineThicknessCounter > 1) {
 						outlineThicknessCounter -= 0.1;
 					}
 					//increases the size for both scale of hull and point position
@@ -117,7 +107,7 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 					//this condition checks to make sure there is always an outline that a user can see that is not too large
 					//if its too large it will cover the points
 					if (sizeMultiplier > 1) {
-						if (outlineThicknessCounter < 0.1) {
+						if (outlineThicknessCounter < 1) {
 							outlineThicknessCounter += 0.1;
 						}
 						sizeMultiplier -= 1;
@@ -139,6 +129,22 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 		//window.draw(circle);
 		window.draw(convexHull);
 
+		for (int i = 0; i < convexHull.getPointCount(); i++) {
+			//This prints the point values of only the points on the convex hull, the int wrapping rounds the value to a whole number
+			xText.setString("(" + std::to_string(int(convexHull.getPoint(i).x)) + "," + std::to_string(int(convexHull.getPoint(i).y)) + ")");
+			//This sets the position, this is a long math equation as each step must be done
+			//The sizemultipler moves both the text and allows for the numbers to grow with the points and not over grow
+			//next we subtract the other size multiplier to instill this matching growth
+			//after that we add 90 and 100 respectively inorder to make it so our point does not sit ontop of the point and will be slightly offset
+			xText.setPosition((convexHull.getPoint(i).x)* sizeMultiplier - (100 * sizeMultiplier)+90, (convexHull.getPoint(i).y * sizeMultiplier) - (100 * sizeMultiplier)+ 100);
+			xText.setFillColor(sf::Color::Red);
+			xText.setCharacterSize(25);
+			xText.setFont(font);
+			xText.setRotation(90);
+			window.draw(xText);
+		}
+		
+
 		// this draws all of the points on the polygon at the correct points
 		for (int i = 0; i < plotted_points.size(); i++) {
 			sf::CircleShape point;
@@ -149,15 +155,8 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 			// change the values inside of set position to all of the points, not just the ones that are in 
 				// the convex hull
 			point.setPosition(std::get<0>(plotted_points[i])*sizeMultiplier + 94, std::get<1>(plotted_points[i])*sizeMultiplier + 95);
-			xText.setString("(" + std::to_string(std::get<0>(plotted_points[i])) + "," + std::to_string(std::get<1>(plotted_points[i])) + ")");
-			xText.setPosition(std::get<0>(plotted_points[i])*sizeMultiplier + 100, std::get<1>(plotted_points[i])*sizeMultiplier + 110);
-			xText.setFillColor(sf::Color::Red);
-			xText.setCharacterSize(25);
-			xText.setFont(font);
-			xText.setRotation(90);
 
 			window.draw(point);
-			window.draw(xText);
 		}
 		window.display();
 	}
