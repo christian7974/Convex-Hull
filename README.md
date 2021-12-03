@@ -16,7 +16,7 @@ We used the programming language C++ in order to implement the algorithm. This r
 5. Select the file Convex_Hull_project.sln file
 ![image](https://user-images.githubusercontent.com/71107413/144626320-e033bd29-e240-4cc3-8947-6d523559e61c.png)
 
-6. Once open hit the Local Windows Debugger button to check if everthing is in order
+6. Once open hit the Local Windows Debugger button to check if everything is in order
 ![image](https://user-images.githubusercontent.com/71107413/144627448-d67f75ee-c94f-439a-8c5c-02e44c3260da.png)
 
 7. If there is an error, go back to the Convex_Hull_project folder
@@ -34,7 +34,8 @@ We used the programming language C++ in order to implement the algorithm. This r
 2. Go to Configuration Properties
 3. Enter the Debugging section
 4. Look for the Command Arguments line
-5. Enter the text file name that you would like to test from the test files folder, it will look like this:
-![image](https://user-images.githubusercontent.com/71107413/144629101-7769d53d-2d5d-4b5a-af4e-45c23d794416.png)
+5. Enter the text file name that you would like to test from the test files folder, it **MUST** be the path to the file. It should look similar to this:
+![image](https://user-images.githubusercontent.com/71107413/144647735-7883a005-5d14-4e61-92c9-faecd086b37f.png)
+
 
 6. This will produce a convex hull from the file chosen
