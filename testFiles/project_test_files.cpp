@@ -12,7 +12,7 @@ void WriteFile(std::string file_name){
     // the program generates at most 4000 points in one file
     for (int i = 0; i < rand() % 4000; i ++) {
         // the x and y will be no greater than 1000 
-        output_file << rand() % 1000 << " " << rand() % 1000 << "\n";
+        output_file << rand() % 900 << " " << rand() % 900 << "\n";
     }
     //for (int i = 0; i < )
 }
