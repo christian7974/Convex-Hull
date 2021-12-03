@@ -23,7 +23,7 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 	}
 	// create the window that will open when the program is launched
 	// first parameter is width, second is height, third is title of the window
-	sf::RenderWindow window(sf::VideoMode(1000, 1000), "Convex Hull Generator");
+	sf::RenderWindow window(sf::VideoMode(1500, 1500), "Convex Hull Generator");
 	
 	//This creates a 2d camera to allow us to orient the screen properly
 	//Allows origin to be in the bottom left
@@ -31,12 +31,7 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 	viewPoint.setRotation(90);
 	window.setView(viewPoint);
 
-	// the first number is the size, the second number is the number of points in the circle
-
-	// the outline pertrudes out
-	// circle.setRadius(15);
-	// circle.setPointCount(12);
-	// the parameter is the number of points in the shape
+	//This determines the number of points to put into the Convex Hull
 	int numPoints = GS_stack.size();
 
 	sf::ConvexShape convexHull(numPoints);
@@ -53,10 +48,6 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 
 	// right now, the point is lying directly on top of the x and y value of the convex hull
 	// the only problem is i have to now print out n number of points on there respective x,y
-	// sf::CircleShape point;
-	// point.setRadius(10);
-	// point.setFillColor(sf::Color(255,255,255));
-	// point.setPosition(xValues[4] - 10,yValues[4] - 7);
 	
 	//Loop that runs for the stack amount and allows for us to make the hull
 	for (int i = 0; i < numPoints; i++)
@@ -81,6 +72,9 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 	//All of this is in regards to our zoom features
 	float outlineThicknessCounter = 1;
 	int sizeMultiplier = 1;
+	//These two integers work to allow us move the convexhull, points, and text when we want to see a certain point zoomed in.
+	int moveX = 0;
+	int moveY = 0;
 
 	// this is the while loop that will display the gui and the visualization of the convex hull
 	while (window.isOpen())
@@ -93,9 +87,9 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 			case sf::Event::Closed:
 				window.close();
 				break;
-			//This event key states that if we press the up arrow or down arrow, the actions inside will occur
+			//This event key states that if we press the U and Z keys, the actions inside will occur, such as zooming in or out
 			case sf::Event::KeyPressed:
-				if (event.key.code == sf::Keyboard::Up) {
+				if (event.key.code == sf::Keyboard::Z) {
 					//this condition checks to make sure there is always an outline that a user can see
 					if (outlineThicknessCounter > 1) {
 						outlineThicknessCounter -= 0.1;
@@ -103,7 +97,7 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 					//increases the size for both scale of hull and point position
 					sizeMultiplier += 1;
 				
-				} else if (event.key.code == sf::Keyboard::Down) {
+				} else if (event.key.code == sf::Keyboard::U) {
 					//this condition checks to make sure there is always an outline that a user can see that is not too large
 					//if its too large it will cover the points
 					if (sizeMultiplier > 1) {
@@ -114,19 +108,31 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 				
 					}
 				}
+				//These four key presses work to move our "Camera" so that our entire hull can be seen
+				else if (event.key.code == sf::Keyboard::Up) {
+					moveY -= 50;
+				}
+				else if (event.key.code == sf::Keyboard::Down) {
+					moveY += 50;
+				}
+				else if (event.key.code == sf::Keyboard::Left) {
+					moveX += 50;
+				}
+				else if (event.key.code == sf::Keyboard::Right) {
+					moveX -= 50;
+				}
 				break;
 			default:
 				break;
 			}
 		}
+
 		//These lines of code set the scale and postion of our convex hull to adjust with the changing values, and allows for the zoom
 		//feature to look semi-normal
 		convexHull.setScale(sizeMultiplier, sizeMultiplier);
-		convexHull.setPosition(100 - (100 * sizeMultiplier), 100 - (100 * sizeMultiplier));
+		convexHull.setPosition(100 - (100 * sizeMultiplier) + moveY, 100 - (100 * sizeMultiplier) + moveX);
 		convexHull.setOutlineThickness(outlineThicknessCounter);
-		//FIX SMALL BUG REGARDING LINE DISAPPERANCE WHEN GETTING AMBITIOUS WITH THE ZOOM BUTTON
 		window.clear(sf::Color::Black);
-		//window.draw(circle);
 		window.draw(convexHull);
 
 		for (int i = 0; i < convexHull.getPointCount(); i++) {
@@ -136,7 +142,7 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 			//The sizemultipler moves both the text and allows for the numbers to grow with the points and not over grow
 			//next we subtract the other size multiplier to instill this matching growth
 			//after that we add 90 and 100 respectively inorder to make it so our point does not sit ontop of the point and will be slightly offset
-			xText.setPosition((convexHull.getPoint(i).x)* sizeMultiplier - (100 * sizeMultiplier)+90, (convexHull.getPoint(i).y * sizeMultiplier) - (100 * sizeMultiplier)+ 100);
+			xText.setPosition((convexHull.getPoint(i).x)* sizeMultiplier - (100 * sizeMultiplier)+90 + moveY, (convexHull.getPoint(i).y * sizeMultiplier) - (100 * sizeMultiplier)+ 100 + moveX);
 			xText.setFillColor(sf::Color::Red);
 			xText.setCharacterSize(25);
 			xText.setFont(font);
@@ -154,7 +160,7 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 			point.setOutlineThickness(outlineThicknessCounter+3);
 			// change the values inside of set position to all of the points, not just the ones that are in 
 				// the convex hull
-			point.setPosition(std::get<0>(plotted_points[i])*sizeMultiplier + 94, std::get<1>(plotted_points[i])*sizeMultiplier + 95);
+			point.setPosition(std::get<0>(plotted_points[i])*sizeMultiplier + 94 + moveY, std::get<1>(plotted_points[i])*sizeMultiplier + 95 + moveX);
 
 			window.draw(point);
 		}
@@ -223,7 +229,7 @@ void findAngle(std::tuple<int, int, double> &lowest, std::tuple<int, int, double
 	double angle;
 	//use the math function atan2, this will spit out the angle in radians
 	//convert to degrees by multiplying by 180, then dividing by pi using the built
-	//in definition M_PI
+	//in definition M_PI(due to not being flexible this was changes to 3.14)
 	angle = std::atan2(std::get<1>(newPoint) - std::get<1>(lowest), std::get<0>(newPoint) - std::get<0>(lowest));
 	angle = angle * 180 / 3.14;
 	std::get<2>(newPoint) = angle;
@@ -332,15 +338,11 @@ int main(int argc, char**argv) {
 	//Read file of points, put into a vector
 	getData(argv[1], plotted_points);
 
-	// for(int i = 0; i < sorted_points.size();i++){
-	//     std::cout << std::get<0>(sorted_points[i]) << ", " << std::get<1>(sorted_points[i]) << '\n';
-	// }
 
 	//Find lowest point in set
 	//Initialize tuple to hold lowest pair, set to lowest function
 	std::tuple<int, int, double> lowestPair = findLowest(plotted_points);
 
-	// std::cout << std::get<0>(lowestPair) << ", " <<std::get<1>(lowestPair);
 
 	//Find angles between initial point and ALL other points
 	int startPoint;
@@ -358,10 +360,6 @@ int main(int argc, char**argv) {
 	// Determine order of points based on angles
 	BucketSort(plotted_points);
 
-	// for(int i = 0; i < plotted_points.size(); i++){
-	//     std::cout << "X: " <<std::get<0>(plotted_points[i])<< " Y: " <<std::get<1>(plotted_points[i]) << " Angle: ";
-	//     std::cout << std::get<2>(plotted_points[i]) << '\n';
-	// }
 
 	//Call function to begin Gramham Scan
 	graham_scan(graham_scan_stack, plotted_points, lowestPair);
