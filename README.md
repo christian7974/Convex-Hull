@@ -29,3 +29,12 @@ We used the programming language C++ in order to implement the algorithm. This r
 10. Hit the Local Windows Debugger button again, if downloaded successfully, the file will produce a window like this:
 ![image](https://user-images.githubusercontent.com/71107413/144628347-5326691a-4551-48a7-aade-aed8d262a0f0.png)
 
+### Setting up Input Test Files:
+1. Go to the Project properties
+2. Go to Configuration Properties
+3. Enter the Debugging section
+4. Look for the Command Arguments line
+5. Enter the text file name that you would like to test from the test files folder, it will look like this:
+![image](https://user-images.githubusercontent.com/71107413/144629101-7769d53d-2d5d-4b5a-af4e-45c23d794416.png)
+
+6. This will produce a convex hull from the file chosen
