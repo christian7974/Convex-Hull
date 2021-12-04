@@ -11,12 +11,9 @@
 
 void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points, std::stack<std::tuple<int, int, double>> &GS_stack) {
 	//initialize the for the zoom function
-	sf::View view;
 	//initialize the stored size of the plotted points for our zoom function
 	//this is because we want to be centered at the lowest point, which is added to the end of
 	//plotted points in main
-	int size = plotted_points.size() - 1;
-
 	sf::Font font;
 	if (!font.loadFromFile("res/roboto/Roboto-Black.ttf")) {
 		std::cout << "Error loading file" << std::endl;
@@ -137,7 +134,8 @@ void GUI_VISUALIZATION(std::vector<std::tuple<int, int, double>>&plotted_points,
 
 		for (int i = 0; i < convexHull.getPointCount(); i++) {
 			//This prints the point values of only the points on the convex hull, the int wrapping rounds the value to a whole number
-			xText.setString("(" + std::to_string(int(convexHull.getPoint(i).x)) + "," + std::to_string(int(convexHull.getPoint(i).y)) + ")");
+			//need to subtract 100 to represent the actual hull
+			xText.setString("(" + std::to_string(int(convexHull.getPoint(i).x) - 100) + "," + std::to_string(int(convexHull.getPoint(i).y) - 100) + ")");
 			//This sets the position, this is a long math equation as each step must be done
 			//The sizemultipler moves both the text and allows for the numbers to grow with the points and not over grow
 			//next we subtract the other size multiplier to instill this matching growth
@@ -256,7 +254,7 @@ std::tuple<int, int, double> findLowest(std::vector<std::tuple<int, int, double>
 
 void getData(std::string fileName, std::vector<std::tuple<int, int, double>>&plotted_points) {
 	//opens file
-	std::ifstream fileOpen("C:\\Users\\tfarg\\Documents\\GitHub\\Convex-Hull\\test.txt");
+	std::ifstream fileOpen(fileName);
 	bool isOpen = fileOpen.is_open();
 	std::string row;
 	//traverses file until the end of file is reached
