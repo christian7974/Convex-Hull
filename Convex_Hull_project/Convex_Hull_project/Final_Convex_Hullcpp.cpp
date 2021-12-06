@@ -189,7 +189,8 @@ void BucketSort(std::vector<std::tuple<int, int, double>> &plotted_points) {
 	std::vector<std::vector<std::tuple<int, int, double>>> buckets;
 	buckets.resize(n);
 
-
+	// Find the maximum angle value from an element from plotted_points. This value is used in a formula to calculate an index which places an element into
+	// a specific bucket
 	double max = std::get<2>(plotted_points[0]);
 	for (int i = 0; i < plotted_points.size(); i++) {
 		if (std::get<2>(plotted_points[i]) > max) {
@@ -197,19 +198,19 @@ void BucketSort(std::vector<std::tuple<int, int, double>> &plotted_points) {
 		}
 	}
 
-	// 2. Put elements in different buckets
+	// 2. Put elements in their respective buckets by calculating an index using the formula below
 	for (int i = 0; i < n; i++) {
-		int bucketIndex = std::floor(n * std::floor(std::get<2>(plotted_points[i])) / max); // Index in bucket
+		int bucketIndex = std::floor(n * std::floor(std::get<2>(plotted_points[i])) / max); 
 		buckets[bucketIndex].push_back(plotted_points[i]);
-
 	}
 
-	// 3. Sort individual buckets using insertion sort
+	// 3. Sort each individual bucket using Insertion Sort by looping through the bucket list
 	for (int i = 0; i < n; i++) {
 		InsertionSort(buckets[i]);
 	}
 
-
+	// 4. Loop through the bucket list to gradually update the unsorted values of plotted_points with the values in the buckets. 
+	//    This will result in a sorted list when the loop terminates.
 	int index = 0;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < buckets[i].size(); j++) {
