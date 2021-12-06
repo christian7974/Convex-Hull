@@ -1,0 +1,7 @@
+Works Cited
+Abiy, Thaddeus. “Convex Hull.” Brilliant Math &amp; Science Wiki, Brilliant.org, https://brilliant.org/wiki/convex-hull/. 
+“Computational Geometry.” Wikipedia, Wikimedia Foundation, 23 Sept. 2021, https://en.wikipedia.org/wiki/Computational_geometry. 
+“Convex Hull.” Wikipedia, Wikimedia Foundation, 17 Nov. 2021, https://en.wikipedia.org/wiki/Convex_hull. 
+“Gift Wrapping Algorithm.” Wikipedia, Wikimedia Foundation, 22 Feb. 2021, https://en.wikipedia.org/wiki/Gift_wrapping_algorithm. 
+“Kirkpatrick–Seidel Algorithm.” Wikipedia, Wikimedia Foundation, 15 Nov. 2021, https://en.wikipedia.org/wiki/Kirkpatrick%E2%80%93Seidel_algorithm. 
+“Quickhull.” Wikipedia, Wikimedia Foundation, 26 Oct. 2021, https://en.wikipedia.org/wiki/Quickhull. 
