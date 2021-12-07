@@ -5,7 +5,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LocalDebuggerCommandArguments>C:\Users\tfarg\Documents\GitHub\Convex-Hull\testFiles\TestFile_3.txt</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>C:\Users\tfarg\Documents\GitHub\Convex-Hull\testFiles\TestFile_4.txt</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
