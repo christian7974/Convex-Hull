@@ -2,4 +2,8 @@
     - using vectors, tuples, libraries 
 - draw a convex and non-convex polygon on the board (do the straight line test)
 - run through conevex hull examples (1-2 difficult ones)
-- talk about the applications of convex hull (game, physics collider)
+- talk about the applications of convex hull (collision avoidance, robot planning)
+- talk about bucket sort and how we implemented it
+- talk about the different kinds of algorithms to find convex hulls
+- go into detail about the graham scan part of the program
+- leave ~3 min left to answer questions from the crowd
