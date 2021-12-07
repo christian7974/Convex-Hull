@@ -2,6 +2,13 @@
 ### Christian Tropeano, Thomas Fargnoli, Benjamin Chau
 This final project for our Data Structures and Abstractions Class involves us implementing convex hulls using Graham's Scan Algorithm.
 We used the programming language C++ in order to implement the algorithm. This repo includes our project report as well as our presentation.
+## **Controls**:
+Z - Zooms in
+U - Unzooms (only if zoomed in)
+Arrow Up - Moves Convex Hull Up
+Arrow Down - Moves Convex Hull Down
+Arrow Left - Moves Convex Hull Left
+Arrow Right - Moves Convex Hull Right
 ## **How to Run our Project**:
 ### Prerequisites:
 - Have Visual Studios Community installed, [you will need the 2017 version](https://my.visualstudio.com/Downloads?q=visual%20studio%202017&wt.mc_id=o~msft~vscom~older-downloads).
