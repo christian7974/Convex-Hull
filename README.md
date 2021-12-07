@@ -3,12 +3,12 @@
 This final project for our Data Structures and Abstractions Class involves us implementing convex hulls using Graham's Scan Algorithm.
 We used the programming language C++ in order to implement the algorithm. This repo includes our project report as well as our presentation.
 ## **Controls**:
-Z - Zooms in
-U - Unzooms (only if zoomed in)
-Arrow Up - Moves Convex Hull Up
-Arrow Down - Moves Convex Hull Down
-Arrow Left - Moves Convex Hull Left
-Arrow Right - Moves Convex Hull Right
+Z - Zooms in  
+U - Unzooms (only if zoomed in)  
+Arrow Up - Moves Convex Hull Up  
+Arrow Down - Moves Convex Hull Down  
+Arrow Left - Moves Convex Hull Left  
+Arrow Right - Moves Convex Hull Right  
 ## **How to Run our Project**:
 ### Prerequisites:
 - Have Visual Studios Community installed, [you will need the 2017 version](https://my.visualstudio.com/Downloads?q=visual%20studio%202017&wt.mc_id=o~msft~vscom~older-downloads).
@@ -34,7 +34,8 @@ Arrow Right - Moves Convex Hull Right
 ![image](https://user-images.githubusercontent.com/71107413/144628113-1644e14b-da27-449d-a042-d76f3db58384.png)
 
 10. Hit the Local Windows Debugger button again, if downloaded successfully, the file will produce a window like this:
-![image](https://user-images.githubusercontent.com/71107413/144628347-5326691a-4551-48a7-aade-aed8d262a0f0.png)
+![image](https://user-images.githubusercontent.com/71107413/145069416-e6c9b753-6523-4344-b4d3-f02687d96b58.png)
+
 
 ### Setting up Input Test Files:
 1. Go to the Project properties
